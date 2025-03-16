@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "uart_rvproc3.h": "c",
+        "console.h": "c",
+        "uart_driver.h": "c",
+        "string.h": "c",
+        "syscall.h": "c",
+        "gpio_rvproc3.h": "c"
+    }
+}
