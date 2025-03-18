@@ -3,6 +3,6 @@
 
 #include <stddef.h>
 
-char* itoa(int val, char* str, int base);
+int atoi(const char* str);
 
 #endif

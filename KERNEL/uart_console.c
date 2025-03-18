@@ -55,6 +55,7 @@ static void __bc_process_line(struct console* console)
 	if (num_tokens > 0)
 	{
 		cmd_name = tokens[0];
+		__bc_write_string2(console, newline);
 		exec(cmd_name, (const char**)(tokens + 1), num_tokens - 1);
 	}
 }

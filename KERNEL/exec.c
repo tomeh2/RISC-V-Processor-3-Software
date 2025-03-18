@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define MAX_SUBPROGRAMS 4
+#define MAX_SUBPROGRAMS 8
 
 struct node
 {

@@ -18,9 +18,11 @@ extern uint32_t _BSS_START_RAM, _BSS_END_RAM;
 extern uint32_t _DATA_START_RAM, _DATA_END_RAM;
 extern uint32_t _DATA_SIZE;
 
-extern void program_1_main(void);
-extern void adt7420_main(void);
-extern void memr_main(void);
+extern void program_1_main(char** argv, unsigned int argc);
+extern void adt7420_main(char** argv, unsigned int argc);
+extern void dump_main(char** argv, unsigned int argc);
+extern void peek_main(char** argv, unsigned int argc);
+extern void poke_main(char** argv, unsigned int argc);
 
 void __mem_init()
 {
@@ -57,6 +59,21 @@ void wait_enter()
 		while (!serial_read(&c, 1));
 	}
 }*/
+
+extern uint32_t hex2int(const char *hex) {
+    uint32_t val = 0;
+    while (*hex) {
+        // get current character then increment
+        char byte = *hex++; 
+        // transform hex character to the 4bit equivalent number, using the ascii table indexes
+        if (byte >= '0' && byte <= '9') byte = byte - '0';
+        else if (byte >= 'a' && byte <='f') byte = byte - 'a' + 10;
+        else if (byte >= 'A' && byte <='F') byte = byte - 'A' + 10;    
+        // shift 4 to make space for new digit, and add the 4 bits of the new digit 
+        val = (val << 4) | (byte & 0xF);
+    }
+    return val;
+}
 
 struct i2c_bus_driver i2c1_driver = 
 {
@@ -96,7 +113,9 @@ void main()
 	//temp_exec_init();
 	temp_register_subroutine("prog", program_1_main);
 	temp_register_subroutine("temp", adt7420_main);
-	temp_register_subroutine("memr", memr_main);
+	temp_register_subroutine("dump", dump_main);
+	temp_register_subroutine("peek", peek_main);
+	temp_register_subroutine("poke", poke_main);
 	//console_init();
 	//test();
 
