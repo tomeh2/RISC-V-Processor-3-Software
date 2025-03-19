@@ -1,10 +1,17 @@
 #include <syscall.h>
-#include <console.h>
+#include <drivers/tty/uart_rvproc3.h>
 
-// Everything goes to console for now
-extern struct console uart_console;
+// For now do IO on the default UART driver
+extern struct uart_driver tty1_driver;
 
 void sys_write(const char* buf, unsigned int len)
 {
-    uart_console.ops->write(&uart_console, buf, len);
+    while (len--)
+        tty1_driver.ops->poll_put_char(&tty1_driver, *buf++);
+}
+
+void sys_read(char* buf, unsigned int len)
+{
+    while (len--)
+        *buf++ = tty1_driver.ops->poll_get_char(&tty1_driver);
 }

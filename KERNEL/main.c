@@ -5,9 +5,6 @@
 #include <stdio.h>
 #include <exec.h>
 
-#include "uart_console.h"
-#include "console.h"
-
 void main(void) __attribute__((noreturn));
 
 extern uint32_t _DATA_START_ROM;
@@ -23,6 +20,7 @@ extern void adt7420_main(char** argv, unsigned int argc);
 extern void dump_main(char** argv, unsigned int argc);
 extern void peek_main(char** argv, unsigned int argc);
 extern void poke_main(char** argv, unsigned int argc);
+extern void shell_main(char** argv, unsigned int argc);
 
 void __mem_init()
 {
@@ -98,18 +96,11 @@ struct gpio_driver gpio1_driver =
 	.ops = &gpio_rvproc3_ops
 };
 
-struct console uart_console =
-{
-	.ops = &bc_console_ops,
-	.private_data = &tty1_driver
-};
-
 void main()
 {
 	__mem_init();
 
 	tty1_driver.ops->init(&tty1_driver);
-	uart_console.ops->init(&uart_console);
 	//temp_exec_init();
 	temp_register_subroutine("prog", program_1_main);
 	temp_register_subroutine("temp", adt7420_main);
@@ -150,9 +141,9 @@ void main()
 	printf("data_start_ram: %x\r\n", &_DATA_START_RAM);
 	printf("data_end_ram: %x\r\n", &_DATA_END_RAM);*/
 	i2c1_driver.ops->init(&i2c1_driver);
-	unsigned int switch_states = 0;
-	char c = 0;
-	while(1)
+	//unsigned int switch_states = 0;
+	//char c = 0;
+	/*while(1)
 	{
 		c = tty1_driver.ops->poll_get_char(&tty1_driver);
 		uart_console.ops->user_putchar(&uart_console, c);
@@ -162,5 +153,8 @@ void main()
 
 		//temp_test();
 		//for (volatile int i = 0; i < 1000000; i++);
-	}
+	}*/
+	shell_main(NULL, 0);
+
+	while (1);
 }

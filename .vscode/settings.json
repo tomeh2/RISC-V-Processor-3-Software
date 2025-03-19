@@ -8,6 +8,7 @@
         "gpio_rvproc3.h": "c",
         "stdlib.h": "c",
         "stdarg.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "*.tcc": "c"
     }
 }

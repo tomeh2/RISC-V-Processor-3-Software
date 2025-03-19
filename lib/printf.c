@@ -1,11 +1,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
-#include <stdlib.h>
-
-#include <syscall.h>
-
-#include <console.h>
+#include <stdio.h>
 
 #define LENMOD_NONE 0
 #define LENMOD_CHAR 1
@@ -38,19 +34,6 @@ struct fmt_spec
 };
 
 static struct fmt_spec fmt_spec_inst;
-
-int putc(const char ch)
-{
-	sys_write(&ch, 1);
-	return 0;
-}
-
-int print(const char* restrict str)
-{
-	unsigned int str_len = strlen(str);
-	sys_write(str, str_len);
-	return 0;
-}
 
 static const char* __parse_specifier(const char* str, unsigned char* spec)
 {
@@ -266,7 +249,7 @@ int printf(const char* restrict format, ...)
 	{
 		if (*format != '%')
 		{
-			putc(*format);
+			putchar(*format);
 			format++;
 			continue;
 		}
@@ -277,19 +260,19 @@ int printf(const char* restrict format, ...)
         {
             int arg = va_arg(params, int);
             __uint_to_string(arg, temp_buf, 10, 1);
-            print(temp_buf);
+            puts(temp_buf);
             break;
         }
         case SPEC_UNSIGNED_CHAR:
         {
 			char arg = (char) va_arg(params, int);
-			putc(arg);
+			putchar(arg);
 			break;
         }
 		case SPEC_STRING:
         {
 		    const char* arg = va_arg(params, const char*);
-		    print(arg);
+		    puts(arg);
 		    break;
         }
         case SPEC_UNSIGNED_HEXADECIMAL:
@@ -299,22 +282,22 @@ int printf(const char* restrict format, ...)
 			int chars_left = fmt_spec_inst.width - strlen(temp_buf);
 			while (chars_left > 0)
 			{
-				print("0");
+				puts("0");
 				chars_left--;
 			}
-			print(temp_buf);
+			puts(temp_buf);
 			break;	
         }
 		case SPEC_UNSIGNED_OCTAL:
         {
 			int arg = va_arg(params, int);
 			__uint_to_string(arg, temp_buf, 8, 0);
-			print(temp_buf);
+			puts(temp_buf);
 			break;
         }
         case SPEC_PERCENTAGE:
         {
-            print("%");
+            puts("%");
 			break;
         }
         default:

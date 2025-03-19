@@ -15,32 +15,26 @@ void dump_main(const char** argv, unsigned int argc)
 {
     if (argc < 2)
     {
-        printf("dump <start_addr [hex]> <length>\n\r");
+        printf("dump <start_addr [hex]> <length [dec]>\n\r");
         return;
     }
     
-    volatile uint32_t* base = (uint32_t*) hex2int(argv[0]);
+    volatile uint32_t* addr = (uint32_t*) hex2int(argv[0]);
     unsigned int length = (unsigned int) atoi(argv[1]);
 
     if (length > MAX_LENGTH)
-        return;
-
-    unsigned int rows = length / VALUES_PER_ROW;
-    unsigned int last_row_values = length % VALUES_PER_ROW;
-
-    for (unsigned int i = 0; i <= rows; i++)
     {
-        printf("0x%08x: ", base);
+        printf("Dump length too large (max %d)!\n\r", MAX_LENGTH);
+        return;
+    }
 
-        unsigned int values_in_row = VALUES_PER_ROW;
-        if (i == rows - 1)
-            values_in_row = last_row_values;
-
-        for (unsigned int j = 0; j < values_in_row; j++)
+    for (unsigned int i = 0; i < length; i++)
+    {
+        if (!(i % VALUES_PER_ROW))
         {
-            printf("0x%08x ", *base);
-            base++;
-        }   
-        printf("\n\r");
+            printf("\n\r0x%08x: ", addr);
+        }
+        printf("0x%08x ", *addr);
+        addr++;
     }
 }

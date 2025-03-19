@@ -26,7 +26,7 @@ void peek_main(char** argv, unsigned int argc)
 
     volatile uint32_t* base = (uint32_t*) hex2int(argv[0]);
     if (flags & 1)
-        printf("%0x08x: 0x%08x\n\r", base, *base);
+        printf("0x%08x: 0x%08x\n\r", base, *base);
     else
-        printf("%0x08x: %d\n\r", base, *base);
+        printf("0x%08x: %d\n\r", base, *base);
 }
