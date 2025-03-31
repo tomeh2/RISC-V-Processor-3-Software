@@ -1,18 +1,22 @@
 #include <string.h>
-#include <subroutine.h>
-
 #include <stdio.h>
 
 #define MAX_SUBPROGRAMS 8
 
-struct node
+#define ARG_STR_MAX_LEN 128
+#define ARGV_MAX_LEN 8
+
+struct subroutine
 {
     const char* key;
-    struct subroutine prog;
+    char arg_str[ARG_STR_MAX_LEN];
+    char* argv[8];
+    unsigned int argc;
+    void (*subroutine)(char** argv, unsigned int argc);
 };
 
 static unsigned int table_used_elements = 0;
-static struct node table[MAX_SUBPROGRAMS];
+static struct subroutine table[MAX_SUBPROGRAMS];
 
 void temp_exec_init()
 {
@@ -25,16 +29,16 @@ void temp_register_subroutine(const char* name, void (*subroutine)(char** argv, 
         return;
 
     table[table_used_elements].key = name;
-    table[table_used_elements].prog.subroutine = subroutine;
+    table[table_used_elements].subroutine = subroutine;
     table_used_elements++;
 }
-
+extern unsigned int history_size;
 int exec(const char* name, const char** argv, unsigned int argc)
 {
     if (!name)
         return -1;
 
-    struct node* n = NULL;
+    struct subroutine* n = NULL;
     for (unsigned int i = 0; i < MAX_SUBPROGRAMS; i++)
     {
         if (!strcmp(name, table[i].key))
@@ -46,17 +50,17 @@ int exec(const char* name, const char** argv, unsigned int argc)
         return -1;
 
     // Copy args into subroutine's local buffer
-    char* local_argbuf = n->prog.arg_str;
+    char* local_argbuf = n->arg_str;
     for (unsigned int i = 0; i < argc; i++)
     {
-        n->prog.argv[i] = local_argbuf;
+        n->argv[i] = local_argbuf;
         unsigned int arg_len = strlen(argv[i]);
         memcpy(local_argbuf, argv[i], arg_len);
         local_argbuf += arg_len;
         *local_argbuf++ = '\0';
     }
-    n->prog.argc = argc;
-    n->prog.subroutine(n->prog.argv, n->prog.argc);
+    n->argc = argc;
+    n->subroutine(n->argv, n->argc);
 
     return 0;
 }

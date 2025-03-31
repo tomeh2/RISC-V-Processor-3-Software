@@ -18,7 +18,6 @@ void dump_main(const char** argv, unsigned int argc)
         printf("dump <start_addr [hex]> <length [dec]>\n\r");
         return;
     }
-    
     volatile uint32_t* addr = (uint32_t*) hex2int(argv[0]);
     unsigned int length = (unsigned int) atoi(argv[1]);
 

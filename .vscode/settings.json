@@ -9,6 +9,12 @@
         "stdlib.h": "c",
         "stdarg.h": "c",
         "stddef.h": "c",
-        "*.tcc": "c"
+        "*.tcc": "c",
+        "linear_allocator.h": "c",
+        "stdio.h": "c",
+        "array": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "utility": "c"
     }
 }

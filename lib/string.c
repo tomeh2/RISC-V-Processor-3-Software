@@ -110,3 +110,11 @@ void* memcpy(void* dst, const void* src, size_t len)
 
 	return dst;
 }
+
+void* memset(void* ptr, int val, size_t len)
+{
+	unsigned char* cptr = (unsigned char*) ptr;
+	for (size_t i = 0; i < len; i++)
+		*cptr++ = (unsigned char) val;
+	return ptr;
+}

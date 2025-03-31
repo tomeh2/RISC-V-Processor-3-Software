@@ -5,7 +5,7 @@ CFLAGS := -ffreestanding -ffunction-sections -nostdlib -march=rv32izicsr -mabi=i
 MAKE := make
 PYTHON3 := python3
 
-ROM_SIZE_KB := 8
+ROM_SIZE_KB := 16
 
 OBJDIR := obj
 LIBDIR := ./../lib
@@ -15,7 +15,7 @@ INCDIR := ./include
 HFILES := $(wildcard *.h)
 CFILES := $(wildcard *.c) $(wildcard drivers/*.c) $(wildcard drivers/i2c/*.c)		\
 	  $(wildcard drivers/tty/*.c) $(wildcard drivers/gpio/*.c)			\
-	  $(wildcard programs/*.c)
+	  $(wildcard programs/*.c) $(wildcard mem/*.c)
 ASFILES := $(wildcard *.S)
 LDFILES := ./../linker.ld
 MKVHDLSCRIPT := ./../makevhdl.py
@@ -25,7 +25,8 @@ OBJ := $(ASFILES:%.S=$(OBJDIR)/%.o) $(CFILES:%.c=$(OBJDIR)/%.o)
 
 dummy := $(shell mkdir -p $(OBJDIR)) $(shell mkdir -p $(OBJDIR)/drivers) 	\
 	 $(shell mkdir -p $(OBJDIR)/drivers/i2c) $(shell mkdir -p $(OBJDIR)/drivers/tty)	\
-	 $(shell mkdir -p $(OBJDIR)/drivers/gpio) $(shell mkdir -p $(OBJDIR)/programs)
+	 $(shell mkdir -p $(OBJDIR)/drivers/gpio) $(shell mkdir -p $(OBJDIR)/programs)		\
+	 $(shell mkdir -p $(OBJDIR)/mem)
 
 $(TARGET): $(OBJ)
 	$(CC) -o $@ $^ $(LIBDIR)/lib.a $(CFLAGS) -T $(LDFILES) $(HFILES) -I$(LIBINCDIR) -I$(INCDIR)
@@ -41,7 +42,8 @@ $(OBJDIR)/%.o: %.c
 
 .PHONY: objdump
 objdump:
-	$(COBJDUMP) -Dh -S $(TARGET) > objdump
+	$(COBJDUMP) -D -S $(TARGET) > $(OBJDUMP_TARGET)-assembly
+	$(COBJDUMP) -x $(TARGET) > $(OBJDUMP_TARGET)-headers
 
 .PHONY: makevhdl
 makevhdl:
@@ -56,5 +58,5 @@ clean:
 	rm -rf obj/
 	rm $(TARGET)
 	rm $(TARGET).bin
-	rm $(OBJDUMP_TARGET)
+	rm $(OBJDUMP_TARGET)*
 	rm $(TARGET).vhd

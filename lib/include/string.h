@@ -10,5 +10,6 @@ unsigned int strlen(const char* str);
 void strrev(char* str, unsigned int strlen);
 char* strtok(char* str, const char* delimeters);
 void* memcpy(void* dst, const void* src, size_t len);
+void* memset(void* ptr, int val, size_t len);
 
 #endif

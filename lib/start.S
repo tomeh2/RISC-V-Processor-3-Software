@@ -1,6 +1,6 @@
 .align 4
 
-.equ STACK_ADDR, 0x80001000
+.equ STACK_ADDR, 0x80010000
 
 .globl _start
 
