@@ -26,9 +26,7 @@ $(OBJDIR)/%.o: %.S
 $(OBJDIR)/%.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-
-
 .PHONY: clean
 clean:
 	rm -rf obj/
-	rm $(TARGET)
+	rm -f $(TARGET)
