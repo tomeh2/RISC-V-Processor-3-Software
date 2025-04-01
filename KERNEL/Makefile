@@ -1,20 +1,11 @@
-CC := riscv64-unknown-elf-gcc
-COBJDUMP := riscv64-unknown-elf-objdump
-COBJCOPY := riscv64-unknown-elf-objcopy
-CFLAGS := -ffreestanding -ffunction-sections -nostdlib -march=rv32izicsr -mabi=ilp32 -O3 -Wall -g -Werror
-MAKE := make
-PYTHON3 := python3
-
-ROM_SIZE_KB := 16
-
 OBJDIR := obj
 LIBDIR := ./../lib
 LIBINCDIR := $(LIBDIR)/include
 INCDIR := ./include
 
 HFILES := $(wildcard *.h)
-CFILES := $(wildcard *.c) $(wildcard drivers/*.c) $(wildcard drivers/i2c/*.c)		\
-	  $(wildcard drivers/tty/*.c) $(wildcard drivers/gpio/*.c)			\
+CFILES := $(wildcard *.c) $(wildcard drivers/*.c) $(wildcard drivers/i2c/*.c)			\
+	  $(wildcard drivers/tty/*.c) $(wildcard drivers/gpio/*.c)							\
 	  $(wildcard programs/*.c) $(wildcard mem/*.c)
 ASFILES := $(wildcard arch/riscv/*.S)
 LDFILES := ./../linker.ld
@@ -23,14 +14,14 @@ TARGET := prog
 OBJDUMP_TARGET := objdump
 OBJ := $(ASFILES:%.S=$(OBJDIR)/%.o) $(CFILES:%.c=$(OBJDIR)/%.o)
 
-dummy := $(shell mkdir -p $(OBJDIR)) $(shell mkdir -p $(OBJDIR)/drivers) 	\
+dummy := $(shell mkdir -p $(OBJDIR)) $(shell mkdir -p $(OBJDIR)/drivers) 				\
 	 $(shell mkdir -p $(OBJDIR)/drivers/i2c) $(shell mkdir -p $(OBJDIR)/drivers/tty)	\
 	 $(shell mkdir -p $(OBJDIR)/drivers/gpio) $(shell mkdir -p $(OBJDIR)/programs)		\
 	 $(shell mkdir -p $(OBJDIR)/mem) $(shell mkdir -p $(OBJDIR)/arch/riscv)
 
 $(TARGET): $(OBJ)
 	$(CC) -o $@ $^ $(LIBDIR)/lib.a $(CFLAGS) -T $(LDFILES) $(HFILES) -I$(LIBINCDIR) -I$(INCDIR)
-	$(COBJCOPY) -O binary $(TARGET) $(TARGET).bin
+	$(OBJCOPY) -O binary $(TARGET) $(TARGET).bin
 	$(MAKE) objdump
 	$(MAKE) makevhdl
 
@@ -42,8 +33,8 @@ $(OBJDIR)/%.o: %.c
 
 .PHONY: objdump
 objdump:
-	$(COBJDUMP) -D -S $(TARGET) > $(OBJDUMP_TARGET)-assembly
-	$(COBJDUMP) -x $(TARGET) > $(OBJDUMP_TARGET)-headers
+	$(OBJDUMP) -D -S $(TARGET) > $(OBJDUMP_TARGET)-assembly
+	$(OBJDUMP) -x $(TARGET) > $(OBJDUMP_TARGET)-headers
 
 .PHONY: makevhdl
 makevhdl:
