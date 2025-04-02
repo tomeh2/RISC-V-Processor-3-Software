@@ -6,6 +6,8 @@ export ROM_SIZE_KB
 # Dirs
 LIBSDIR := lib
 KERNELDIR := KERNEL
+PROGDIR := programs
+PROGRAMS := dump peek poke shell temp test
 
 # Toolchain
 MAKE := make
@@ -21,15 +23,21 @@ export AR
 export MAKE
 export PYTHON3
 
+# Libs
+LIBINC = ./include/
+KERNINC = ./../KERNEL/include/
+export LIBINC
+export KERNINC
+
 # Flags
-OPTFLAGS := -O3
+OPTFLAGS := -O2
 DEBUGFLAGS := -g
 WFLAGS := -Wall -Werror
 CFLAGS := -ffreestanding -nostdlib -nostdinc $(OPTFLAGS)
 CFLAGS += -mabi=ilp32 -march=$(MARCH) $(WFLAGS) $(DEBUGFLAGS)
 export CFLAGS
 
-all: libs kernel debug install
+all: libs programs kernel debug install
 
 libs:
 	cd $(LIBSDIR) && $(MAKE) clean
@@ -45,7 +53,30 @@ install:
 debug:
 	cd $(KERNELDIR) && $(MAKE) objdump
 
+.PHONY: programs
+programs:
+	cd $(PROGDIR)/dump && $(MAKE) clean
+	cd $(PROGDIR)/peek && $(MAKE) clean
+	cd $(PROGDIR)/poke && $(MAKE) clean
+	cd $(PROGDIR)/shell && $(MAKE) clean
+	cd $(PROGDIR)/temp && $(MAKE) clean
+	cd $(PROGDIR)/test && $(MAKE) clean
+#	cd $(PROGDIR)/dhrystone && $(MAKE) clean
+	cd $(PROGDIR)/dump && $(MAKE) 
+	cd $(PROGDIR)/peek && $(MAKE) 
+	cd $(PROGDIR)/poke && $(MAKE) 
+	cd $(PROGDIR)/shell && $(MAKE) 
+	cd $(PROGDIR)/temp && $(MAKE) 
+	cd $(PROGDIR)/test && $(MAKE)
+#	cd $(PROGDIR)/dhrystone && $(MAKE)
+
 .PHONY: clean
 clean:
 	cd $(LIBSDIR) && $(MAKE) clean
 	cd $(KERNELDIR) && $(MAKE) clean
+	cd $(PROGDIR)/dump && $(MAKE) clean
+	cd $(PROGDIR)/peek && $(MAKE) clean
+	cd $(PROGDIR)/poke && $(MAKE) clean
+	cd $(PROGDIR)/shell && $(MAKE) clean
+	cd $(PROGDIR)/temp && $(MAKE) clean
+	cd $(PROGDIR)/test && $(MAKE) clean

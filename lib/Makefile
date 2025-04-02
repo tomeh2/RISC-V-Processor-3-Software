@@ -1,15 +1,12 @@
 OBJDIR := obj
 
-HFILES := $(wildcard *.h) $(wildcard float/*.h)
-CFILES := $(wildcard *.c) $(wildcard float/*.c)
+HFILES := $(wildcard *.h)
+CFILES := $(wildcard *.c)
 ASFILES := $(wildcard *.S)
 TARGET := lib.a
 OBJ := $(ASFILES:%.S=$(OBJDIR)/%.o) $(CFILES:%.c=$(OBJDIR)/%.o)
 
-LIBINC = ./include/
-KERNINC = ./../KERNEL/include/
-
-dummy := $(shell mkdir -p $(OBJDIR)) $(shell mkdir -p $(OBJDIR)/float)
+dummy := $(shell mkdir -p $(OBJDIR))
 
 $(TARGET): $(OBJ)
 	$(AR) rcs $@ $^

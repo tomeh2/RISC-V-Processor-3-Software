@@ -14,13 +14,22 @@ TARGET := prog
 OBJDUMP_TARGET := objdump
 OBJ := $(ASFILES:%.S=$(OBJDIR)/%.o) $(CFILES:%.c=$(OBJDIR)/%.o)
 
+# Programs linked at compile-time
+PROGFILES := ../programs/dump/dump.o					\
+			 ../programs/shell/shell.o					\
+			 ../programs/temp/adt7420_prog.o			\
+			 ../programs/test/program_1.o				\
+			 ../programs/peek/peek.o					\
+			 ../programs/poke/poke.o					
+#			 ../programs/dhrystone/dhry.o				\
+
 dummy := $(shell mkdir -p $(OBJDIR)) $(shell mkdir -p $(OBJDIR)/drivers) 				\
 	 $(shell mkdir -p $(OBJDIR)/drivers/i2c) $(shell mkdir -p $(OBJDIR)/drivers/tty)	\
 	 $(shell mkdir -p $(OBJDIR)/drivers/gpio) $(shell mkdir -p $(OBJDIR)/programs)		\
 	 $(shell mkdir -p $(OBJDIR)/mem) $(shell mkdir -p $(OBJDIR)/arch/riscv)
 
 $(TARGET): $(OBJ)
-	$(CC) -o $@ $^ $(LIBDIR)/lib.a $(CFLAGS) -T $(LDFILES) $(HFILES) -I$(LIBINCDIR) -I$(INCDIR)
+	$(CC) -o $@ $^ $(PROGFILES) $(CFLAGS) -T $(LDFILES) $(HFILES) -I$(LIBINCDIR) -I$(INCDIR) $(LIBDIR)/lib.a
 	$(OBJCOPY) -O binary $(TARGET) $(TARGET).bin
 	$(MAKE) objdump
 	$(MAKE) makevhdl

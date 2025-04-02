@@ -18,27 +18,27 @@
 
 static uint8_t temp_startrepeat = 0;
 
-uint32_t __i2c_rvproc3_reg_read(struct i2c_bus_driver* drv, uint32_t offset)
+uint32_t inline __i2c_rvproc3_reg_read(struct i2c_bus_driver* drv, uint32_t offset)
 {
 	return *(drv->mm.base_addr + offset);
 }
 
-void __i2c_rvproc3_reg_write(struct i2c_bus_driver* drv, uint32_t offset, uint32_t value)
+void inline __i2c_rvproc3_reg_write(struct i2c_bus_driver* drv, uint32_t offset, uint32_t value)
 {
 	*(drv->mm.base_addr + offset) = value;
 }
 
-void __i2c_rvproc3_reg_set_bit(struct i2c_bus_driver* drv, uint32_t offset, uint8_t bit)
+void inline __i2c_rvproc3_reg_set_bit(struct i2c_bus_driver* drv, uint32_t offset, uint8_t bit)
 {
 	*(drv->mm.base_addr + offset) |= (1 << bit);
 }
 
-void __i2c_rvproc3_reg_unset_bit(struct i2c_bus_driver* drv, uint32_t offset, uint8_t bit)
+void inline __i2c_rvproc3_reg_unset_bit(struct i2c_bus_driver* drv, uint32_t offset, uint8_t bit)
 {
 	*(drv->mm.base_addr + offset) &= ~(1 << bit);
 }
 
-uint8_t __i2c_rvproc3_reg_get_bit(struct i2c_bus_driver* drv, uint32_t offset, uint8_t bit)
+uint8_t inline __i2c_rvproc3_reg_get_bit(struct i2c_bus_driver* drv, uint32_t offset, uint8_t bit)
 {
 	return (*(drv->mm.base_addr + offset) >> bit) & 1;
 }

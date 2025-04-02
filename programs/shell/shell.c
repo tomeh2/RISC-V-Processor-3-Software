@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
-#include <shell.h>
+#include "shell.h"
 
 #define LINE_BUFFER_LEN 64
 
